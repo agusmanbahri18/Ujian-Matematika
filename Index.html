@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ujian Siswa - SMP Negeri 004 Kota Jambi</title>
+<style>
+:root{--navy:#12324a;--navy2:#1c4964;--teal:#0d9488;--green:#15803d;--blue:#2563eb;--red:#b91c1c;--ink:#172b4d;--muted:#63758a;--line:#dbe4ee;--bg:#f3f6fb;--greenbg:#dcfce7;--redbg:#fee2e2;--yellowbg:#fef3c7;--shadow:0 10px 28px #12324a12}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.5}
+button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.55;cursor:wait}
+.top{background:linear-gradient(115deg,var(--navy),var(--navy2));color:#fff;padding:22px max(18px,calc((100vw - 1200px)/2));box-shadow:0 5px 18px #10294325}
+.kicker{font-size:.76rem;letter-spacing:.13em;text-transform:uppercase;color:#a8dadc;font-weight:bold}
+.top h1{font-size:clamp(1.25rem,2.5vw,2rem);line-height:1.2;margin:7px 0}.top p{margin:0;color:#d5e4ef}
+.toprow{display:flex;gap:14px;align-items:center;justify-content:space-between}
+.badge{border:1px solid #6c879d;border-radius:12px;padding:9px 12px;background:#ffffff12;font-size:.8rem;white-space:nowrap}
+.wrap{max-width:1200px;margin:26px auto;padding:0 16px 35px}
+.panel{background:#fff;border:1px solid #e1e8f0;border-radius:18px;box-shadow:var(--shadow);padding:clamp(18px,3vw,30px)}
+.narrow{max-width:760px;margin:auto}
+.eyebrow{color:#0f766e;letter-spacing:.12em;text-transform:uppercase;font-size:.75rem;font-weight:bold}
+.panel h2{margin:5px 0 8px}.panel h3{margin:18px 0 6px}.muted{color:var(--muted)}
+.logo{display:block;margin:0 auto 6px;width:118px;height:auto}
+.school{text-align:center;margin-bottom:14px}.school b{display:block;font-size:1.05rem;color:var(--navy)}.school span{font-size:.8rem;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.grid3{display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:8px}
+.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}
+.field label,.lbl{font-weight:bold;font-size:.9rem}
+.field input,.field select,.grid3 select{width:100%;padding:12px 13px;border:1px solid #c9d5e3;border-radius:10px;outline:none;background:#fff}
+.field input:focus,.field select:focus,.grid3 select:focus{border-color:var(--teal);box-shadow:0 0 0 3px #0d948820}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
+.btn{border:0;border-radius:10px;padding:11px 16px;font-weight:bold}
+.btn-teal{background:var(--teal);color:#fff}.btn-green{background:var(--green);color:#fff}.btn-blue{background:var(--blue);color:#fff}.btn-red{background:var(--red);color:#fff}
+.btn-light{background:#e8eef5;color:#25445f}.btn-outline{background:#fff;border:1px solid #bdcbd9;color:#29445d}
+.status{display:none;margin-top:12px;padding:11px 13px;border-radius:10px;font-weight:bold;font-size:.9rem}
+.status.error{display:block;background:var(--redbg);color:var(--red);border:1px solid #fecaca}
+.status.success{display:block;background:var(--greenbg);color:#166534;border:1px solid #bbf7d0}
+.status.info{display:block;background:#e0f2fe;color:#075985;border:1px solid #bae6fd}
+.note{font-size:.8rem;border:1px solid #e2e8f0;background:#f8fafc;border-radius:10px;padding:12px;color:#52687e;margin-top:15px}
+.hide{display:none!important}
+.examtop{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px}
+.candidate{color:var(--muted);font-size:.88rem}.candidate b{color:var(--ink)}
+.timer{border:1px solid #fed7aa;background:#fff7ed;color:#9a3412;padding:10px 14px;border-radius:12px;font-weight:900;font-variant-numeric:tabular-nums}
+.timer.urgent{background:var(--redbg);color:var(--red);border-color:#fca5a5}
+.progress{height:7px;background:#e4ebf3;border-radius:20px;overflow:hidden;margin-bottom:18px}
+.progress div{height:100%;background:linear-gradient(90deg,var(--teal),#5eead4);width:0}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:18px;align-items:start}
+.question{border:1px solid var(--line);border-radius:15px;padding:clamp(17px,3vw,28px);background:#fff;min-height:320px}
+.qmeta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px;color:#0f766e;font-size:.8rem;font-weight:900}
+.qtext{font-size:1.08rem;line-height:1.8;font-weight:600;white-space:pre-line;margin:0 0 16px}
+.qimg{display:block;max-width:100%;max-height:340px;margin:0 0 18px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.options{display:grid;gap:9px}
+.option{display:flex;align-items:flex-start;gap:10px;text-align:left;width:100%;padding:11px 12px;border:1.5px solid #d9e3ee;border-radius:11px;background:#fbfdff;color:var(--ink)}
+.option:hover{border-color:#72b8b4}.option.selected{border-color:var(--teal);background:#e6fffb}
+.option img{max-width:100%;max-height:170px;border-radius:6px;background:#fff}
+.letter{display:inline-flex;width:28px;height:28px;flex:0 0 28px;align-items:center;justify-content:center;background:#edf2f7;border-radius:7px;font-weight:bold}
+.option.selected .letter{background:var(--teal);color:#fff}
+.qfooter{display:flex;justify-content:space-between;gap:10px;margin-top:18px}
+.navpanel{border:1px solid var(--line);border-radius:15px;background:#fff;padding:16px;position:sticky;top:12px}
+.navpanel h3{margin:0 0 4px;font-size:1rem}.navpanel p{margin:0 0 12px;color:var(--muted);font-size:.78rem}
+.navgrid{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:5px}
+.navbtn{border:1px solid #d6e0ea;background:#f8fafc;border-radius:6px;padding:7px 0;font-size:.76rem;font-weight:bold;color:#52687e}
+.navbtn.answered{background:var(--greenbg);border-color:#86efac;color:#166534}.navbtn.current{outline:2px solid var(--teal);outline-offset:1px}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:11px;font-size:.75rem;color:#52687e}
+.dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;background:#f8fafc;border:1px solid #cbd5e1}.dot.done{background:var(--greenbg);border-color:#86efac}
+.finishHead{display:flex;gap:14px;align-items:center}
+.check{width:54px;height:54px;border-radius:15px;display:grid;place-items:center;background:var(--greenbg);color:var(--green);font-size:1.8rem;font-weight:bold}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin:20px 0}
+.stat{border:1px solid var(--line);border-radius:13px;padding:14px;background:#fbfdff}
+.stat span{display:block;font-size:.78rem;color:var(--muted);margin-bottom:5px}.stat strong{font-size:1.55rem;color:var(--navy)}
+.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:11px;margin-top:12px;background:#fff;max-width:100%;max-height:620px}
+.tbl{border-collapse:separate;border-spacing:0;width:100%;font-size:.79rem;white-space:nowrap}
+.tbl th,.tbl td{padding:8px 10px;border-bottom:1px solid #e6edf4;text-align:left}
+.tbl th{background:#edf3f8;color:#304c66;position:sticky;top:0;z-index:1}
+.good{background:#d9ead3!important;color:#166534!important;font-weight:bold}.bad{background:#f4cccc!important;color:#991b1b!important;font-weight:bold}.blankcell{background:#eee!important;color:#64748b!important}
+.teacherTop{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:16px 0}.teacherTop .stat{padding:12px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-top:14px}.toolbar .field{min-width:170px}
+.small{font-size:.78rem;color:var(--muted)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0 4px;border-bottom:2px solid #e3eaf2}
+.tab{border:0;background:transparent;padding:10px 14px;font-weight:bold;color:#52687e;border-bottom:3px solid transparent;margin-bottom:-2px;border-radius:8px 8px 0 0}
+.tab.active{color:var(--teal);border-bottom-color:var(--teal);background:#f0fdfa}
+.footer{text-align:center;color:#8292a4;font-size:.76rem;margin-top:18px}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.navpanel{position:static;order:-1}}
+@media(max-width:560px){.top{padding:18px 14px}.badge{font-size:.7rem;padding:7px}.wrap{margin:14px auto;padding:0 9px 22px}.panel{border-radius:14px;padding:16px}.grid2{grid-template-columns:1fr}.field.full{grid-column:auto}.examtop{align-items:flex-start;flex-direction:column}.timer{width:100%;text-align:center}.navgrid{grid-template-columns:repeat(6,minmax(0,1fr))}.stats{grid-template-columns:repeat(2,1fr)}.qtext{font-size:1rem}.grid3{grid-template-columns:1fr 1.3fr 1fr}}
+.mid{background:#fff2cc!important;color:#854d0e!important;font-weight:bold}
+.bar{display:inline-block;vertical-align:middle;width:70px;height:8px;border-radius:6px;background:#e4ebf3;overflow:hidden;margin-right:6px}.bar i{display:block;height:100%;background:var(--teal)}
+.subrow td{background:#fafcfe;color:#475b70}td.wrapcell{white-space:normal;min-width:240px}
+.keycell{outline:2px solid #15803d;outline-offset:-2px;font-weight:bold}
+.detailbox{white-space:normal;padding:12px 14px;background:#f8fbfd;border-left:4px solid var(--teal)}.detailbox .q{font-weight:bold;white-space:pre-line;margin-bottom:8px}.detailbox .op{display:flex;gap:8px;align-items:center;padding:3px 0}.detailbox .op.key{color:#166534;font-weight:bold}
+/* Proteksi ujian */
+#examView{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#examView.guard-on .question,#examView.guard-on .navpanel,#examView.guard-on .examtop,#examView.guard-on .progress{visibility:hidden!important}
+.guard-overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(18,50,74,.97)}
+.guard-box{max-width:480px;width:100%;background:#fff;border-radius:18px;padding:28px;text-align:center}
+.guard-icon{width:58px;height:58px;margin:0 auto 10px;border-radius:16px;display:grid;place-items:center;background:var(--yellowbg);color:#b45309;font-size:1.9rem;font-weight:bold}
+#examWatermark{position:fixed;inset:0;z-index:50;pointer-events:none}
+#guardToast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:10000;background:#172b4d;color:#fff;padding:10px 16px;border-radius:10px;font-size:.85rem;font-weight:bold}
+@media print{#examView,#examWatermark{display:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="toprow"><div><div class="kicker">SMP Negeri 004 Kota Jambi</div><h1 id="examTitle">UJIAN TENGAH SEMESTER</h1><p id="examSubtitle">Mata Pelajaran Matematika</p></div><div class="badge" id="examBadge">90 Menit</div></div></header>
+<main class="wrap">
+
+<!-- LOGIN -->
+<section id="loginView" class="panel narrow">
+  <img class="logo" alt="Logo SMP Negeri 004 Kota Jambi" src="data:image/jpeg;base64,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">
+  <div class="school"><b>SMP NEGERI 004 KOTA JAMBI</b><span>Berkarakter, Berilmu, Terampil, Berwawasan Lingkungan dan Global</span></div>
+  <div class="eyebrow">Halaman peserta</div><h2>Login Ujian</h2>
+  <p class="muted">Masukkan NISN dan tanggal lahir sesuai data siswa yang terdaftar.</p>
+  <form id="loginForm">
+    <div class="grid2">
+      <div class="field full" id="codeField"><label for="sesiCode">Kode Sesi</label><input id="sesiCode" required autocomplete="off" placeholder="Masukkan kode sesi dari pengawas"></div>
+      <div class="field full"><label for="nisn">NISN</label><input id="nisn" required inputmode="numeric" autocomplete="off" placeholder="Masukkan NISN"></div>
+      <div class="field full"><span class="lbl">Tanggal lahir</span>
+        <input type="date" id="dob" required min="2000-01-01" aria-label="Tanggal lahir"><span class="small">Klik kolom lalu pilih tanggal dari kalender (tahun dapat dipilih dengan mengeklik bulan/tahun di bagian atas kalender).</span></div>
+    </div>
+    <div class="actions"><button class="btn btn-teal" id="verifyBtn" type="submit">Verifikasi Data</button><button class="btn btn-green hide" id="startBtn" type="button">Mulai Ujian</button><button class="btn btn-outline" id="teacherBtn" type="button">Panel Rekap Guru</button></div>
+  </form>
+  <div id="loginStatus" class="status"></div>
+  <div class="note" id="loginNote"><b>Perhatian:</b> Setiap siswa hanya dapat mengerjakan ujian satu kali. Jawaban dinilai otomatis setelah ujian diselesaikan atau waktu habis.</div>
+</section>
+
+<!-- UJIAN -->
+<section id="examView" class="hide">
+  <div class="examtop"><div class="candidate">Peserta: <b id="candidateName"></b><br><span id="candidateClass"></span></div><div id="timer" class="timer">Sisa waktu <span id="timerText">--:--</span></div></div>
+  <div class="progress"><div id="progressFill"></div></div>
+  <div class="layout">
+    <article class="question">
+      <div class="qmeta"><span id="qNumber">SOAL 1</span><span id="qCount"></span></div>
+      <p id="qText" class="qtext"></p><div id="qImgBox"></div><div id="options" class="options"></div>
+      <div class="qfooter"><button id="prevBtn" type="button" class="btn btn-blue hide">Soal Sebelumnya</button><button id="nextBtn" type="button" class="btn btn-green">Soal Selanjutnya</button><button id="finishBtn" type="button" class="btn btn-teal hide">Selesaikan Ujian</button></div>
+      <div id="saveStatus" class="small" aria-live="polite"></div>
+    </article>
+    <aside class="navpanel"><h3>Daftar Soal</h3><p>Klik nomor untuk berpindah soal.</p><div id="navGrid" class="navgrid"></div>
+      <div class="legend"><span><i class="dot done"></i>Sudah dijawab</span><span><i class="dot"></i>Belum dijawab</span></div>
+      <div class="actions"><button id="finishSideBtn" class="btn btn-teal" type="button" style="width:100%">Selesaikan Ujian</button></div></aside>
+  </div>
+</section>
+
+<!-- HASIL SISWA -->
+<section id="resultView" class="panel hide">
+  <div class="finishHead"><div class="check" id="resultIcon">✓</div><div><div class="eyebrow">Hasil ujian</div><h2 id="resultMessage"></h2><div id="resultSub" class="muted"></div></div></div>
+  <div id="timeoutNote" class="status error hide"></div><div id="resultNote" class="status"></div>
+  <div class="stats" id="resultStats"><div class="stat"><span>Skor</span><strong id="scoreValue">0</strong></div><div class="stat"><span>Jawaban benar</span><strong id="correctValue">0</strong></div><div class="stat"><span>Jawaban salah</span><strong id="wrongValue">0</strong></div><div class="stat"><span>Tidak dijawab</span><strong id="blankValue">0</strong></div></div>
+  <div id="tpBlock" class="hide"><h3>Ketercapaian Tujuan Pembelajaran Anda</h3><p class="small">Persentase jawaban benar pada soal tiap TP. Pelajari kembali TP yang berstatus "Perlu penguatan" atau "Belum tercapai".</p><div id="studentTP" class="tablewrap"></div></div>
+  <div class="actions"><button id="exitBtn" class="btn btn-outline" type="button">Keluar</button></div>
+</section>
+
+<!-- PANEL GURU -->
+<section id="teacherView" class="panel hide">
+  <div class="eyebrow">Khusus guru</div><h2>Panel Rekap Nilai Siswa</h2><p class="muted">Masukkan PIN guru untuk melihat hasil yang tersimpan pada Google Sheets.</p>
+  <div class="grid2"><div class="field"><label for="teacherPin">PIN Guru</label><input type="password" id="teacherPin" placeholder="Masukkan PIN guru" autocomplete="off"></div><div class="field" style="justify-content:end"><button id="loadTeacherBtn" class="btn btn-teal" type="button">Tampilkan Rekap</button></div></div>
+  <div id="teacherStatus" class="status"></div>
+  <div id="teacherDataView" class="hide">
+    <div class="toolbar">
+      <div class="field"><label for="teacherClass">Kelas</label><select id="teacherClass"><option value="SEMUA">SEMUA</option></select></div>
+      <div class="field"><label for="teacherSearch">Cari siswa</label><input id="teacherSearch" type="search" placeholder="Nama / kelas / NISN" autocomplete="off"></div>
+      <button id="refreshBtn" class="btn btn-outline" type="button">Perbarui Data</button>
+      <button id="saveSheetBtn" class="btn btn-blue" type="button" title="Menulis ulang tab Analisis TP Siswa, Analisis TP Kelas, dan Analisis Butir Soal di spreadsheet">Simpan Analisis ke Spreadsheet</button>
+    </div>
+    <div class="teacherTop"><div class="stat"><span>Peserta selesai</span><strong id="totalValue">0</strong></div><div class="stat"><span>Rata-rata nilai</span><strong id="averageValue">0</strong></div><div class="stat"><span>Nilai tertinggi</span><strong id="highestValue">0</strong></div><div class="stat"><span>Nilai terendah</span><strong id="lowestValue">0</strong></div><div class="stat"><span id="kkmLabel">Di bawah KKM</span><strong id="belowValue">0</strong></div></div>
+    <div class="tabs" id="teacherTabs"><button class="tab active" data-tab="rekap" type="button">Rekap &amp; Peringkat</button><button class="tab" data-tab="tpkelas" type="button">Ketercapaian TP</button><button class="tab" data-tab="tpsiswa" type="button">TP per Siswa</button><button class="tab" data-tab="soal" type="button">Analisis Butir Soal</button><button class="tab" data-tab="matriks" type="button">Matriks Jawaban</button></div>
+    <div id="tab-rekap" class="tabpane">
+      <p class="small">Centang siswa lalu hapus hasilnya agar siswa dapat mengerjakan ujian kembali. Data yang dihapus dicatat pada tab "Log Hapus".</p>
+      <div class="actions" style="margin-top:8px"><button id="deleteSelectedBtn" class="btn btn-red" type="button">Hapus Terpilih</button><button id="downloadBtn" class="btn btn-green" type="button">Unduh Rekap CSV</button></div>
+      <div id="teacherLeaderboard" class="tablewrap"></div>
+    </div>
+    <div id="tab-tpkelas" class="tabpane hide">
+      <h3>Ketercapaian Tujuan Pembelajaran dan Indikator</h3>
+      <p class="small">Persentase jawaban benar seluruh peserta pada soal tiap TP/indikator. Tercapai &ge; 75%, perlu penguatan 50-74%, belum tercapai &lt; 50% (batas dapat diubah di Code.gs). Kolom kanan = jumlah siswa pada tiap kategori (per TP).</p>
+      <div id="teacherTP" class="tablewrap"></div>
+    </div>
+    <div id="tab-tpsiswa" class="tabpane hide">
+      <h3>Ketercapaian TP untuk Setiap Siswa</h3>
+      <p class="small">Tiap sel menampilkan jumlah benar/jumlah soal dan persentase. Hijau = tercapai, kuning = perlu penguatan, merah = belum tercapai. Data yang sama tersimpan otomatis pada tab "Analisis TP Siswa" di spreadsheet.</p>
+      <div class="actions" style="margin-top:8px"><button id="downloadTpBtn" class="btn btn-green" type="button">Unduh TP per Siswa CSV</button></div>
+      <div id="teacherTPStudent" class="tablewrap"></div>
+    </div>
+    <div id="tab-soal" class="tabpane hide">
+      <h3>Analisis Butir Soal</h3>
+      <p class="small">Dihitung per nomor dan per varian soal. Tingkat kesukaran (p): &gt; 0,70 mudah; 0,30-0,70 sedang; &lt; 0,30 sukar. Daya pembeda (D) memakai kelompok atas/bawah 27%: &ge; 0,40 sangat baik; 0,30-0,39 baik; 0,20-0,29 cukup; &lt; 0,20 perlu revisi. Pengecoh berfungsi bila dipilih &ge; 5% peserta. Sel hijau bergaris = kunci jawaban. KR-20 bersifat perkiraan karena siswa menerima varian soal berbeda.</p>
+      <div id="itemSummary" class="teacherTop"></div>
+      <div class="toolbar"><div class="field"><label for="itemSort">Urutkan</label><select id="itemSort"><option value="no">Nomor soal</option><option value="sulit">Paling sukar</option><option value="mudah">Paling mudah</option><option value="dp">Daya pembeda terendah</option></select></div><button id="downloadItemBtn" class="btn btn-green" type="button">Unduh Analisis Soal CSV</button></div>
+      <div id="teacherItems" class="tablewrap"></div>
+    </div>
+    <div id="tab-matriks" class="tabpane hide">
+      <p class="small">Hijau = benar, merah = salah, abu-abu = kosong. "V1/V2" menunjukkan varian soal yang diterima siswa. Baris terakhir adalah persentase benar tiap nomor.</p>
+      <div id="teacherMatrix" class="tablewrap"></div>
+    </div>
+  </div>
+  <div class="actions"><button id="closeTeacherBtn" class="btn btn-outline" type="button">Kembali ke Login</button></div>
+</section>
+<div class="footer">SMP Negeri 004 Kota Jambi</div>
+</main>
+
+<div id="examWatermark" class="hide" aria-hidden="true"></div>
+<div id="guardToast" class="hide" role="status"></div>
+<div id="guardOverlay" class="guard-overlay hide" role="alertdialog" aria-modal="true">
+  <div class="guard-box"><div class="guard-icon">!</div><h2>Soal Disembunyikan</h2><p id="guardMsg"></p>
+  <p class="small">Waktu ujian tetap berjalan. Tetaplah berada di halaman ujian dan jangan membuka aplikasi, tab, atau jendela lain.</p>
+  <div class="actions" style="justify-content:center"><button id="guardResume" class="btn btn-teal" type="button">Kembali ke Ujian</button></div></div>
+</div>
+
+<script>
+/* ====== PENGATURAN (nilai default; durasi & batas akhir diambil dari Code.gs) ====== */
+const DEFAULTS = { durationMinutes: 90 };
+const DOB_MIN = '2000-01-01';
+
+let token=null, student=null, questions=[], answers=[], currentQuestion=0, endAt=null, timerId=null, finishing=false, teacherData=null, answerRevision=0, clockOffset=0;
+const $=id=>document.getElementById(id);
+const LET='ABCD';
+function showOnly(id){['loginView','examView','resultView','teacherView'].forEach(x=>$(x).classList.toggle('hide',x!==id));}
+function setStatus(id,msg,type){const el=$(id);el.textContent=msg||'';el.className='status'+(msg?' '+(type||'info'):'');}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function fmtDur(s){s=Math.max(0,Number(s)||0);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
+function now(){return Date.now()+clockOffset;}
+
+/* ====== Konfigurasi dari server & dropdown tanggal lahir ====== */
+(function init(){
+  $('dob').min=DOB_MIN;$('dob').max=new Date().toISOString().slice(0,10);
+  $('examBadge').textContent=DEFAULTS.durationMinutes+' Menit';
+  google.script.run.withSuccessHandler(function(c){
+    if(!c)return;
+    $('examTitle').textContent=c.title||$('examTitle').textContent;$('examSubtitle').textContent=c.subtitle||'';
+    $('examBadge').textContent=(c.questionCount?c.questionCount+' Soal · ':'')+c.durationMinutes+' Menit';
+    if(!c.requireCode){$('codeField').classList.add('hide');$('sesiCode').required=false;}
+    if(c.deadlineText)$('loginNote').innerHTML+='<br><b>Batas akhir pengerjaan:</b> '+esc(c.deadlineText)+'. Jika Anda mulai mendekati batas akhir, sisa waktu mengikuti batas akhir tersebut.';
+    clockOffset=(Number(c.serverNow)||Date.now())-Date.now();
+  }).getPublicConfig();
+})();
+
+/* ====== PROTEKSI UJIAN ====== */
+const ExamGuard=(function(){
+  let active=false,hidden=false,count=0,muted=false,tt=null;
+  const exam=$('examView'),ov=$('guardOverlay'),wm=$('examWatermark'),te=$('guardToast');
+  function toast(m){te.textContent=m;te.classList.remove('hide');clearTimeout(tt);tt=setTimeout(()=>te.classList.add('hide'),2200);}
+  function block(e){e.preventDefault();e.stopPropagation();}
+  function conceal(r){if(!active||muted)return;if(!hidden){hidden=true;count++;exam.classList.add('guard-on');ov.classList.remove('hide');}$('guardMsg').textContent=r+'. Pelanggaran terdeteksi: '+count+' kali.';}
+  function reveal(){if(!active)return;hidden=false;exam.classList.remove('guard-on');ov.classList.add('hide');}
+  function watermark(t){const svg="<svg xmlns='http://www.w3.org/2000/svg' width='340' height='200'><text x='20' y='110' transform='rotate(-25 170 100)' font-family='Arial' font-size='16' font-weight='bold' fill='#12324a' fill-opacity='0.09'>"+esc(t)+"</text></svg>";wm.style.backgroundImage='url("data:image/svg+xml,'+encodeURIComponent(svg)+'")';}
+  window.addEventListener('blur',()=>conceal('Anda meninggalkan halaman ujian'));
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)conceal('Anda berpindah tab atau aplikasi');});
+  window.addEventListener('beforeprint',()=>conceal('Mencetak halaman tidak diizinkan'));
+  document.addEventListener('keydown',function(e){
+    if(!active)return;const k=String(e.key||'').toLowerCase(),c=e.ctrlKey||e.metaKey;
+    if(e.key==='PrintScreen'){block(e);conceal('Tombol Print Screen terdeteksi');return;}
+    if(e.key==='F12'||(c&&e.shiftKey&&['i','j','c','k','s'].indexOf(k)>=0)||(c&&k==='u')){block(e);conceal('Tombol terlarang terdeteksi');return;}
+    if(c&&['c','x','v','a','s','p','f','g'].indexOf(k)>=0){block(e);toast('Tombol kombinasi dinonaktifkan selama ujian.');}
+  },true);
+  document.addEventListener('contextmenu',e=>{if(active){block(e);toast('Klik kanan dinonaktifkan selama ujian.');}});
+  ['copy','cut','paste','selectstart','dragstart'].forEach(ev=>document.addEventListener(ev,e=>{if(active)block(e);}));
+  $('guardResume').addEventListener('click',reveal);
+  return{
+    enable(l){active=true;hidden=false;count=0;exam.classList.remove('guard-on');ov.classList.add('hide');watermark(l);wm.classList.remove('hide');},
+    disable(){active=false;hidden=false;exam.classList.remove('guard-on');ov.classList.add('hide');wm.classList.add('hide');te.classList.add('hide');},
+    quiet(fn){muted=true;try{return fn();}finally{setTimeout(()=>{muted=false;},600);}}
+  };
+})();
+
+/* ====== LOGIN ====== */
+function clearStart(){$('startBtn').classList.add('hide');token=null;}
+$('loginForm').addEventListener('submit',function(ev){
+  ev.preventDefault();clearStart();
+  const dp=($('dob').value||'').split('-');
+  if(dp.length!==3){setStatus('loginStatus','Pilih tanggal lahir terlebih dahulu.','error');return;}
+  setStatus('loginStatus','Memeriksa data siswa…','info');$('verifyBtn').disabled=true;
+  google.script.run.withSuccessHandler(function(res){
+    $('verifyBtn').disabled=false;
+    if(!res||!res.ok){setStatus('loginStatus',res&&res.message?res.message:'data tidak ditemukan','error');return;}
+    student=res.student;
+    if(res.completed){renderResult(res.result,false,true);return;}
+    token=res.token;answerRevision=Number(res.revision)||0;
+    $('startBtn').textContent=res.running?'Lanjutkan Ujian':'Mulai Ujian';$('startBtn').classList.remove('hide');
+    setStatus('loginStatus',(res.student.name?'Halo, '+res.student.name+' ('+res.student.kelas+'). ':'')+(res.message||''),'success');
+  }).withFailureHandler(function(err){$('verifyBtn').disabled=false;setStatus('loginStatus','Gagal memeriksa data: '+(err&&err.message?err.message:'kesalahan server'),'error');})
+  .verifyLogin($('sesiCode').value,$('nisn').value,String(Number(dp[2])),String(Number(dp[1])),dp[0]);
+});
+$('startBtn').addEventListener('click',function(){
+  if(!token)return;$('startBtn').disabled=true;
+  google.script.run.withSuccessHandler(function(res){
+    $('startBtn').disabled=false;
+    if(!res||!res.ok){setStatus('loginStatus',res&&res.message?res.message:'Ujian tidak dapat dimulai.','error');return;}
+    if(res.completed){renderResult(res.result,!!res.timedOut,!!res.previous);return;}
+    questions=res.questions||[];
+    answers=Array.from({length:questions.length},(_,i)=>(res.answers&&Number.isInteger(res.answers[i]))?res.answers[i]:null);
+    currentQuestion=Math.min(Number(res.currentQuestion)||0,questions.length-1);
+    clockOffset=(Number(res.serverNow)||Date.now())-Date.now();endAt=Number(res.endAt);
+    answerRevision=Math.max(answerRevision,Number(res.revision)||0);finishing=false;
+    $('candidateName').textContent=student.name;$('candidateClass').textContent='Kelas '+student.kelas;
+    showOnly('examView');ExamGuard.enable(student.name+' · '+student.kelas);renderQuestion();renderNav();startTimer();
+  }).withFailureHandler(function(err){$('startBtn').disabled=false;setStatus('loginStatus','Gagal memulai ujian: '+(err&&err.message?err.message:'kesalahan server'),'error');}).startExam(token);
+});
+
+/* ====== TAMPILAN SOAL ====== */
+function imgTag(src,cls){return `<img ${cls?'class="'+cls+'" ':''}src="${esc(src)}" alt="Gambar" referrerpolicy="no-referrer" onerror="this.outerHTML='<i class=small>(gambar tidak dapat dimuat)</i>'">`;}
+function renderQuestion(){
+  if(!questions.length)return;const q=questions[currentQuestion];
+  $('qNumber').textContent='SOAL '+(currentQuestion+1);$('qCount').textContent=(currentQuestion+1)+' dari '+questions.length;
+  $('qText').textContent=q.q||'';$('qText').classList.toggle('hide',!q.q);
+  $('qImgBox').innerHTML=q.img?imgTag(q.img,'qimg'):'';
+  $('options').innerHTML=q.opts.map((o,i)=>`<button type="button" class="option ${answers[currentQuestion]===i?'selected':''}" data-option="${i}"><span class="letter">${LET[i]}</span><span>${o.img?imgTag(o.img):esc(o.t)}</span></button>`).join('');
+  $('options').querySelectorAll('[data-option]').forEach(b=>b.addEventListener('click',()=>{if(finishing)return;answers[currentQuestion]=Number(b.dataset.option);renderQuestion();renderNav();persist();}));
+  const last=currentQuestion===questions.length-1;
+  $('prevBtn').classList.toggle('hide',currentQuestion===0);$('nextBtn').classList.toggle('hide',last);$('finishBtn').classList.toggle('hide',!last);
+  $('progressFill').style.width=(answers.filter(a=>a!==null).length/questions.length*100)+'%';
+}
+function renderNav(){
+  $('navGrid').innerHTML=questions.map((q,i)=>`<button type="button" class="navbtn ${answers[i]!==null?'answered':''} ${i===currentQuestion?'current':''}" data-nav="${i}">${i+1}</button>`).join('');
+  $('navGrid').querySelectorAll('[data-nav]').forEach(b=>b.addEventListener('click',()=>{currentQuestion=Number(b.dataset.nav);renderQuestion();renderNav();persist();}));
+}
+function persist(){
+  if(!token)return;$('saveStatus').textContent='Menyimpan jawaban…';
+  const rev=++answerRevision;
+  google.script.run.withSuccessHandler(function(res){
+    if(res&&res.expired){$('saveStatus').textContent='Waktu habis, mengirim jawaban…';finishExam('timeout');}
+    else if(res&&res.ok)$('saveStatus').textContent='Jawaban tersimpan';
+    else $('saveStatus').textContent='Sinkronisasi jawaban perlu diperiksa.';
+  }).withFailureHandler(function(){$('saveStatus').textContent='Koneksi bermasalah. Periksa koneksi internet.';}).saveAnswers(token,answers.slice(),currentQuestion,rev);
+}
+$('prevBtn').addEventListener('click',()=>{if(currentQuestion>0){currentQuestion--;renderQuestion();renderNav();persist();}});
+$('nextBtn').addEventListener('click',()=>{if(currentQuestion<questions.length-1){currentQuestion++;renderQuestion();renderNav();persist();}});
+$('finishBtn').addEventListener('click',confirmFinish);$('finishSideBtn').addEventListener('click',confirmFinish);
+function confirmFinish(){
+  if(finishing)return;const blanks=answers.filter(a=>a===null).length;
+  if(blanks>0){ExamGuard.quiet(()=>alert('Terdapat '+blanks+' soal yang belum dijawab. Jawab semua soal sebelum menyelesaikan ujian.'));return;}
+  if(ExamGuard.quiet(()=>window.confirm('Selesaikan ujian sekarang? Jawaban tidak dapat diubah setelah dikirim.')))finishExam('manual');
+}
+function startTimer(){if(timerId)clearInterval(timerId);tick();timerId=setInterval(tick,1000);}
+function tick(){if(!endAt||finishing)return;const r=Math.max(0,endAt-now());$('timerText').textContent=fmtDur(Math.floor(r/1000));$('timer').classList.toggle('urgent',r<=300000);if(r<=0)finishExam('timeout');}
+function finishExam(reason){
+  if(finishing||!token)return;finishing=true;if(timerId){clearInterval(timerId);timerId=null;}
+  $('finishBtn').disabled=true;$('finishSideBtn').disabled=true;$('saveStatus').textContent='Mengirim jawaban dan menghitung nilai…';
+  const rev=++answerRevision;const go=()=>sendSubmission(reason);
+  google.script.run.withSuccessHandler(go).withFailureHandler(go).saveAnswers(token,answers.slice(),currentQuestion,rev);
+}
+function sendSubmission(reason){
+  const fail=m=>{finishing=false;$('finishBtn').disabled=false;$('finishSideBtn').disabled=false;$('saveStatus').textContent=m;};
+  google.script.run.withSuccessHandler(function(res){
+    if(!res||!res.ok){fail(res&&res.message?res.message:'Pengiriman gagal. Periksa koneksi lalu coba kembali.');return;}
+    renderResult(res.result,res.timedOut,false);
+  }).withFailureHandler(function(err){fail('Gagal mengirim hasil: '+(err&&err.message?err.message:'periksa koneksi internet'));}).submitExam(token,reason);
+}
+
+/* ====== HASIL SISWA ====== */
+function renderResult(r,timedOut,previous){
+  ExamGuard.disable();showOnly('resultView');if(timerId){clearInterval(timerId);timerId=null;}
+  const t=!previous&&(timedOut||String(r.status||'').toUpperCase().includes('HABIS'));
+  $('resultMessage').textContent=previous?'Anda sudah pernah mengerjakan ujian ini':(t?'Maaf waktu habis, terima kasih atas partisipasinya!':'Selamat, Anda telah menyelesaikan ujian!');
+  $('resultIcon').textContent=previous?'ℹ':(t?'⌛':'✓');
+  $('resultSub').textContent=(r.name||'')+' · Kelas '+(r.kelas||'')+' · '+(r.status||'');
+  $('timeoutNote').classList.toggle('hide',!t);$('timeoutNote').textContent=t?'Ujian berakhir karena waktu pengerjaan telah habis.':'';
+  $('resultStats').classList.toggle('hide',!r.showScore);
+  let note='',type='info';
+  if(!r.showScore){note='Jawaban Anda telah tersimpan. Nilai akan disampaikan oleh guru.';type='success';}
+  else{
+    $('scoreValue').textContent=r.score;$('correctValue').textContent=r.correct;$('wrongValue').textContent=r.wrong;$('blankValue').textContent=r.unanswered;
+    if(previous)note='Setiap siswa hanya dapat mengerjakan ujian satu kali. Nilai Anda sebelumnya adalah '+r.score+(r.finishedAt?' (dikerjakan pada '+r.finishedAt+')':'')+'.';
+    if(r.remedial){note=(note?note+' ':'')+'Nilai Anda belum mencapai batas ketuntasan ('+r.kkm+'). Silakan hubungi guru untuk melaksanakan remedial.';type='error';}
+    else{note=(note?note+' ':'')+'Nilai Anda sudah mencapai batas ketuntasan ('+r.kkm+').';type='success';}
+  }
+  setStatus('resultNote',note,type);
+  renderStudentTP(r.showScore?r.tp:null);
+}
+$('exitBtn').addEventListener('click',function(){
+  if(timerId)clearInterval(timerId);token=null;student=null;questions=[];answers=[];endAt=null;finishing=false;
+  $('loginForm').reset();setStatus('loginStatus','','');$('startBtn').classList.add('hide');showOnly('loginView');
+});
+
+/* ====== PANEL GURU ====== */
+let teacherFilter='';
+$('teacherBtn').addEventListener('click',()=>{showOnly('teacherView');setStatus('teacherStatus','','');$('teacherDataView').classList.add('hide');});
+$('closeTeacherBtn').addEventListener('click',()=>showOnly('loginView'));
+$('loadTeacherBtn').addEventListener('click',()=>loadTeacher());
+$('refreshBtn').addEventListener('click',()=>loadTeacher());
+$('teacherClass').addEventListener('change',()=>loadTeacher());
+$('teacherSearch').addEventListener('input',e=>{teacherFilter=e.target.value;safeRender(renderTable,'teacherLeaderboard');safeRender(renderTPStudent,'teacherTPStudent');safeRender(renderMatrix,'teacherMatrix');});
+$('itemSort').addEventListener('change',()=>safeRender(renderItems,'teacherItems'));
+document.querySelectorAll('#teacherTabs .tab').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#teacherTabs .tab').forEach(x=>x.classList.toggle('active',x===b));
+  document.querySelectorAll('.tabpane').forEach(p=>p.classList.toggle('hide',p.id!=='tab-'+b.dataset.tab));
+}));
+function loadTeacher(msg){
+  setStatus('teacherStatus','Mengambil rekap dari Google Sheets…','info');$('loadTeacherBtn').disabled=true;
+  google.script.run.withSuccessHandler(function(d){
+    $('loadTeacherBtn').disabled=false;
+    if(!d||!d.ok){setStatus('teacherStatus',d&&d.message?d.message:'Gagal mengambil rekap.','error');$('teacherDataView').classList.add('hide');return;}
+    teacherData=d;setStatus('teacherStatus',typeof msg==='string'?msg:'Rekap berhasil dimuat.','success');renderTeacher(d);
+  }).withFailureHandler(function(err){$('loadTeacherBtn').disabled=false;setStatus('teacherStatus','Gagal: '+(err&&err.message?err.message:'kesalahan server'),'error');})
+  .getTeacherData($('teacherPin').value,$('teacherClass').value||'SEMUA');
+}
+function visible(){const f=teacherFilter.trim().toLowerCase();const rs=(teacherData&&teacherData.records)||[];return f?rs.filter(r=>(r.name+' '+r.kelas+' '+r.nisn).toLowerCase().includes(f)):rs;}
+function emptyBox(t){return '<div style="padding:20px;color:#64748b">'+t+'</div>';}
+function renderTeacher(d){
+  $('teacherDataView').classList.remove('hide');
+  const sel=$('teacherClass');sel.innerHTML=['SEMUA'].concat(d.classes||[]).map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');sel.value=d.kelas||'SEMUA';
+  const s=d.stats;$('totalValue').textContent=s.total;$('averageValue').textContent=s.average;$('highestValue').textContent=s.highest;$('lowestValue').textContent=s.lowest;
+  $('belowValue').textContent=s.belowKkm;$('kkmLabel').textContent='Di bawah KKM ('+s.kkm+')';
+  safeRender(renderTable,'teacherLeaderboard');safeRender(renderTPClass,'teacherTP');safeRender(renderTPStudent,'teacherTPStudent');safeRender(renderItems,'teacherItems');safeRender(renderMatrix,'teacherMatrix');
+}
+function renderTable(){
+  const rs=visible(),all=(teacherData&&teacherData.records)||[],box=$('teacherLeaderboard');
+  if(!rs.length){box.innerHTML=emptyBox(all.length?'Tidak ada data yang cocok dengan pencarian.':'Belum ada hasil ujian.');return;}
+  box.innerHTML='<table class="tbl"><thead><tr><th><input type="checkbox" id="chkAll"></th><th>Peringkat</th><th>Nama</th><th>Kelas</th><th>NISN</th><th>Skor</th><th>Benar</th><th>Salah</th><th>Kosong</th><th>Waktu</th><th>Status</th><th>Aksi</th></tr></thead><tbody>'+
+  rs.map(r=>`<tr><td><input type="checkbox" class="rowchk" data-nisn="${esc(r.nisn)}"></td><td>${r.rank}</td><td>${esc(r.name)}</td><td>${esc(r.kelas)}</td><td>${esc(r.nisn)}</td><td><b>${r.score}</b></td><td>${r.correct}</td><td>${r.wrong}</td><td>${r.unanswered}</td><td>${fmtDur(r.durationSec)}</td><td>${esc(r.status)}</td><td><button type="button" class="btn btn-red" data-del="${esc(r.nisn)}" style="padding:4px 10px;font-size:.75rem">Hapus</button></td></tr>`).join('')+'</tbody></table>';
+  $('chkAll').addEventListener('change',e=>box.querySelectorAll('.rowchk').forEach(c=>{c.checked=e.target.checked;}));
+  box.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>confirmDelete([b.dataset.del])));
+}
+function confirmDelete(nisns){
+  if(!nisns.length){setStatus('teacherStatus','Centang minimal satu siswa terlebih dahulu.','error');return;}
+  const names=teacherData.records.filter(r=>nisns.includes(r.nisn)).map(r=>r.name+' ('+r.kelas+', skor '+r.score+')');
+  if(!window.confirm('Hapus hasil ujian berikut?\n\n'+names.join('\n')+'\n\nSiswa dapat mengerjakan ujian kembali. Tindakan ini tidak dapat dibatalkan.'))return;
+  setStatus('teacherStatus','Menghapus data…','info');
+  google.script.run.withSuccessHandler(function(res){if(!res||!res.ok){setStatus('teacherStatus',res&&res.message?res.message:'Gagal menghapus data.','error');return;}loadTeacher(res.message);})
+  .withFailureHandler(function(err){setStatus('teacherStatus','Gagal: '+(err&&err.message?err.message:'kesalahan server'),'error');}).deleteStudentResults($('teacherPin').value,nisns);
+}
+$('deleteSelectedBtn').addEventListener('click',()=>confirmDelete(Array.from(document.querySelectorAll('#teacherLeaderboard .rowchk:checked')).map(c=>c.dataset.nisn)));
+
+function maxItems(){return Math.max(0,...((teacherData&&teacherData.records)||[]).map(r=>(r.items||[]).length));}
+function renderMatrix(){
+  const rs=visible(),box=$('teacherMatrix'),n=maxItems();
+  if(!rs.length||!n){box.innerHTML=emptyBox('Belum ada hasil untuk ditampilkan.');return;}
+  const cls=s=>s.startsWith('BENAR')?'good':s.startsWith('SALAH')?'bad':'blankcell';
+  const pct=Array.from({length:n},(_,k)=>{let b=0;rs.forEach(r=>{if(String((r.items||[])[k]||'').startsWith('BENAR'))b++;});return Math.round(b/rs.length*100);});
+  box.innerHTML='<table class="tbl"><thead><tr><th>Peringkat</th><th>Nama</th><th>Kelas</th><th>Skor</th>'+Array.from({length:n},(_,i)=>`<th>Soal ${i+1}</th>`).join('')+'</tr></thead><tbody>'+
+  rs.map(r=>`<tr><td>${r.rank}</td><td>${esc(r.name)}</td><td>${esc(r.kelas)}</td><td><b>${r.score}</b></td>`+Array.from({length:n},(_,k)=>{const s=String((r.items||[])[k]||'KOSONG');return `<td class="${cls(s)}">${esc(s)}</td>`;}).join('')+'</tr>').join('')+
+  '<tr><td colspan="4"><b>% benar</b></td>'+pct.map(p=>`<td><b>${p}%</b></td>`).join('')+'</tr></tbody></table>';
+}
+
+/* ====== ANALISIS TP & BUTIR SOAL ====== */
+let openItems={};
+const catCls=k=>k==='Tercapai'?'good':(k==='Perlu penguatan'?'mid':'bad');
+function bar(p){return '<span class="bar"><i style="width:'+Math.max(0,Math.min(100,p))+'%"></i></span>';}
+function safeRender(fn,id){try{fn();}catch(e){console.error(id,e);$(id).innerHTML=emptyBox('Bagian ini gagal ditampilkan: '+esc(e&&e.message?e.message:e));}}
+
+function renderStudentTP(list){
+  const has=list&&list.length;$('tpBlock').classList.toggle('hide',!has);if(!has)return;
+  $('studentTP').innerHTML='<table class="tbl"><thead><tr><th>Kode TP</th><th>Tujuan Pembelajaran</th><th>Benar</th><th>Ketercapaian</th><th>Status</th></tr></thead><tbody>'+
+  list.map(t=>`<tr><td><b>${esc(t.tp)}</b></td><td class="wrapcell">${esc(t.desc||'-')}</td><td>${t.benar}/${t.jumlahSoal}</td><td>${bar(t.percent)}<b>${t.percent}%</b></td><td class="${catCls(t.kategori)}">${esc(t.kategori)}</td></tr>`).join('')+'</tbody></table>';
+}
+
+function renderTPClass(){
+  const tps=(teacherData&&teacherData.tpStats)||[],box=$('teacherTP');
+  if(!tps.length||!teacherData.stats.total){box.innerHTML=emptyBox('Belum ada hasil untuk dianalisis.');return;}
+  box.innerHTML='<table class="tbl"><thead><tr><th>Kode TP</th><th>Tujuan Pembelajaran / Indikator</th><th>No. Soal</th><th>Jml Soal</th><th>Ketercapaian</th><th>Kategori</th><th>Siswa tercapai</th><th>Siswa perlu penguatan</th><th>Siswa belum tercapai</th></tr></thead><tbody>'+
+  tps.map(t=>{
+    let h=`<tr><td><b>${esc(t.tp)}</b></td><td class="wrapcell"><b>${esc(t.desc||'-')}</b></td><td>${esc(t.soal)}</td><td>${t.jumlahSoal}</td><td>${bar(t.percent)}<b>${t.percent}%</b></td><td class="${catCls(t.kategori)}">${esc(t.kategori)}</td><td>${t.nTercapai}</td><td>${t.nPenguatan}</td><td>${t.nBelum}</td></tr>`;
+    t.indikator.forEach((i,k)=>{h+=`<tr class="subrow"><td>&nbsp;&nbsp;Indikator ${k+1}</td><td class="wrapcell">${esc(i.text)}</td><td>${esc(i.soal)}</td><td>${i.jumlahSoal}</td><td>${bar(i.percent)}${i.percent}%</td><td class="${catCls(i.kategori)}">${esc(i.kategori)}</td><td></td><td></td><td></td></tr>`;});
+    return h;}).join('')+'</tbody></table>';
+}
+
+function renderTPStudent(){
+  const rs=visible(),box=$('teacherTPStudent'),codes=(teacherData&&teacherData.tpCodes)||[];
+  if(!rs.length){box.innerHTML=emptyBox('Belum ada hasil untuk dianalisis.');return;}
+  box.innerHTML='<table class="tbl"><thead><tr><th>No</th><th>Nama</th><th>Kelas</th><th>Skor</th>'+codes.map(c=>`<th>${esc(c)}</th>`).join('')+'<th>Perlu remedial / penguatan pada</th></tr></thead><tbody>'+
+  rs.map((r,n)=>{
+    const by={};r.tp.forEach(t=>{by[t.tp]=t;});
+    const weak=r.tp.filter(t=>t.kategori!=='Tercapai').map(t=>t.tp);
+    return `<tr><td>${n+1}</td><td>${esc(r.name)}</td><td>${esc(r.kelas)}</td><td><b>${r.score}</b></td>`+codes.map(c=>{const t=by[c];return t?`<td class="${catCls(t.kategori)}" title="${esc(t.kategori)}">${t.benar}/${t.jumlahSoal} (${t.percent}%)</td>`:'<td class="blankcell">-</td>';}).join('')+`<td>${weak.length?esc(weak.join(', ')):'-'}</td></tr>`;}).join('')+'</tbody></table>';
+}
+
+function renderItems(){
+  const an=teacherData&&teacherData.itemAnalysis,box=$('teacherItems'),sum=$('itemSummary');
+  if(!an||!teacherData.stats.total){sum.innerHTML='';box.innerHTML=emptyBox('Belum ada hasil untuk dianalisis.');return;}
+  const r=an.ringkasan;
+  sum.innerHTML=[['Reliabilitas (KR-20)',an.kr20===null?'-':an.kr20+' ('+an.kr20Kat+')'],['Soal mudah',r.mudah],['Soal sedang',r.sedang],['Soal sukar',r.sukar],['Perlu revisi (D < 0,20)',r.revisi]].map(x=>`<div class="stat"><span>${x[0]}</span><strong style="font-size:${String(x[1]).length>6?'1.05rem':'1.55rem'}">${esc(x[1])}</strong></div>`).join('');
+  let items=an.items.slice();const mode=$('itemSort').value;
+  if(mode==='sulit')items.sort((a,b)=>(a.peserta?a.p:9)-(b.peserta?b.p:9)||a.no-b.no);
+  else if(mode==='mudah')items.sort((a,b)=>b.p-a.p||a.no-b.no);
+  else if(mode==='dp')items.sort((a,b)=>(a.D===null?9:a.D)-(b.D===null?9:b.D)||a.no-b.no);
+  const kesCls=k=>k==='Sukar'?'bad':(k==='Mudah'?'mid':(k==='Sedang'?'good':'blankcell'));
+  const dpCls=d=>d===null?'blankcell':(d>=0.30?'good':(d>=0.20?'mid':'bad'));
+  box.innerHTML='<table class="tbl"><thead><tr><th>No</th><th>Var.</th><th>TP</th><th>Level</th><th>Kunci</th><th>Peserta</th><th>% Benar</th><th>Kesukaran</th><th>D</th><th>Daya pembeda</th><th>A</th><th>B</th><th>C</th><th>D</th><th>Kosong</th><th>Rekomendasi</th><th>Detail</th></tr></thead><tbody>'+
+  items.map(it=>{
+    const id=it.no+'-'+it.varian,open=!!openItems[id];
+    const cell=(L,idx)=>idx>=it.nOpts?'<td>-</td>':`<td class="${it.key===L?'keycell good':''}">${it.dist[L]}</td>`;
+    let h=`<tr><td><b>${it.no}</b></td><td>V${it.varian}</td><td>${esc(it.tp)}</td><td>${esc(it.lvl)}</td><td><b>${it.key}</b></td><td>${it.peserta}</td><td>${bar(Math.round(it.p*100))}${Math.round(it.p*100)}%</td><td class="${kesCls(it.kesukaran)}">${esc(it.kesukaran)}</td><td>${it.D===null?'-':it.D.toFixed(2)}</td><td class="${dpCls(it.D)}">${esc(it.dayaPembeda)}</td>${'ABCD'.split('').map((L,k)=>cell(L,k)).join('')}<td>${it.dist.KOSONG}</td><td class="wrapcell">${esc(it.rekomendasi)}</td><td><button type="button" class="btn btn-light" data-item="${id}" style="padding:4px 10px;font-size:.75rem">${open?'Tutup':'Lihat'}</button></td></tr>`;
+    if(open){
+      const n=it.peserta||1;
+      h+=`<tr><td colspan="17" style="white-space:normal"><div class="detailbox"><div class="q">${it.no}. ${esc(it.q)}</div>`+it.opts.map((o,k)=>{const L='ABCD'[k],c=it.dist[L];return `<div class="op ${L===it.key?'key':''}"><span class="letter">${L}</span><span style="flex:1">${esc(o)}</span><span>${bar(Math.round(c/n*100))}${c} siswa (${Math.round(c/n*100)}%)${L===it.key?' ✓ kunci':''}</span></div>`;}).join('')+
+      `<div class="small" style="margin-top:8px">Pengecoh terpopuler: <b>${esc(it.topWrong)}</b>. Pengecoh tidak berfungsi: <b>${esc(it.deadDistractors||'tidak ada')}</b>.<br>Indikator: ${esc(it.ind||'-')} (${esc(it.tp)}, level ${esc(it.lvl)}).</div></div></td></tr>`;
+    }
+    return h;}).join('')+'</tbody></table>';
+  box.querySelectorAll('[data-item]').forEach(b=>b.addEventListener('click',()=>{const k=b.dataset.item;openItems[k]=!openItems[k];safeRender(renderItems,'teacherItems');}));
+}
+
+$('saveSheetBtn').addEventListener('click',function(){
+  if(!window.confirm('Perbarui tab "Analisis TP Siswa", "Analisis TP Kelas", dan "Analisis Butir Soal" di spreadsheet? Isinya ditulis ulang dari data terbaru (semua kelas).'))return;
+  $('saveSheetBtn').disabled=true;setStatus('teacherStatus','Menulis tab analisis ke spreadsheet…','info');
+  google.script.run.withSuccessHandler(function(res){$('saveSheetBtn').disabled=false;setStatus('teacherStatus',res&&res.message?res.message:'Selesai.',res&&res.ok?'success':'error');})
+  .withFailureHandler(function(err){$('saveSheetBtn').disabled=false;setStatus('teacherStatus','Gagal: '+(err&&err.message?err.message:'kesalahan server'),'error');})
+  .saveAnalysisToSheets($('teacherPin').value);
+});
+
+/* ====== UNDUH CSV ====== */
+function q(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"';}
+$('downloadBtn').addEventListener('click',function(){
+  if(!teacherData||!teacherData.records){setStatus('teacherStatus','Muat rekap terlebih dahulu.','error');return;}
+  const n=maxItems();
+  const rows=[['Peringkat','Nama','Kelas','NISN','Skor','Benar','Salah','Kosong','Durasi (detik)','Status','Waktu selesai'].concat(Array.from({length:n},(_,i)=>'Soal '+(i+1)))]
+    .concat(teacherData.records.map(r=>[r.rank,r.name,r.kelas,"'"+r.nisn,r.score,r.correct,r.wrong,r.unanswered,r.durationSec,r.status,r.finishedAt].concat(r.items||[])));
+  const blob=new Blob(['\ufeff'+rows.map(r=>r.map(q).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Rekap_Nilai_Ujian.csv';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+});
+
+function saveCsv(rows,filename){const blob=new Blob(['\ufeff'+rows.map(r=>r.map(q).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);}
+$('downloadTpBtn').addEventListener('click',function(){
+  if(!teacherData||!teacherData.records){setStatus('teacherStatus','Muat rekap terlebih dahulu.','error');return;}
+  const codes=teacherData.tpCodes||[],header=['Nama','Kelas','NISN','Skor'];
+  codes.forEach(c=>header.push(c+' Benar',c+' Jumlah soal',c+' (%)',c+' Kategori'));header.push('Perlu remedial / penguatan');
+  saveCsv([header].concat(teacherData.records.map(r=>{const by={};r.tp.forEach(t=>{by[t.tp]=t;});const row=[r.name,r.kelas,"'"+r.nisn,r.score];
+    codes.forEach(c=>{const t=by[c];row.push(t?t.benar:'',t?t.jumlahSoal:'',t?t.percent:'',t?t.kategori:'-');});
+    row.push(r.tp.filter(t=>t.kategori!=='Tercapai').map(t=>t.tp).join('; ')||'-');return row;})),'TP_per_Siswa.csv');
+});
+$('downloadItemBtn').addEventListener('click',function(){
+  if(!teacherData||!teacherData.itemAnalysis){setStatus('teacherStatus','Muat rekap terlebih dahulu.','error');return;}
+  const header=['No','Varian','TP','Indikator','Level','Kunci','Peserta','Benar','p','Kesukaran','D','Daya pembeda','A','B','C','D','Kosong','Pengecoh tidak berfungsi','Pengecoh terpopuler','Rekomendasi'];
+  saveCsv([header].concat(teacherData.itemAnalysis.items.map(i=>[i.no,'V'+i.varian,i.tp,i.ind,i.lvl,i.key,i.peserta,i.benar,i.p,i.kesukaran,i.D===null?'':i.D,i.dayaPembeda,i.dist.A,i.dist.B,i.dist.C,i.dist.D,i.dist.KOSONG,i.deadDistractors||'-',i.topWrong,i.rekomendasi])),'Analisis_Butir_Soal.csv');
+});
+</script>
+</body>
+</html>
